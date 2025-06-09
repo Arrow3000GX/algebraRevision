@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GCSE Algebra Revision</title>
+    <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,6 +37,11 @@
         .chess-board {
             margin-top: 20px;
             text-align: center;
+        }
+        #board {
+            width: 400px;
+            height: 400px;
+            margin: auto;
         }
     </style>
 </head>
@@ -77,13 +83,44 @@
 
     <h2>Play Chess Online</h2>
     <div class="chess-board">
-        <iframe src="https://lichess.org/embed" width="600" height="400" frameborder="0"></iframe>
+        <div id="board"></div>
+        <button id="startBtn">Start Position</button>
+        <button id="clearBtn">Clear Board</button>
     </div>
 
     <footer>
         <p>&copy; 2025 GCSE Revision Resources</p>
     </footer>
 </div>
+
+<script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.js"></script>
+<script>
+    var board = ChessBoard('board', {
+        draggable: true,
+        position: 'start',
+        onDrop: handleDrop,
+        onSnapEnd: onSnapEnd
+    });
+
+    function handleDrop(source, target) {
+        // Check if the move is legal
+        var move = board.move({
+            from: source,
+            to: target,
+            promotion: 'q' // promote to queen
+        });
+
+        // If the move was illegal, snap back
+        if (move === null) return 'snapback';
+    }
+
+    function onSnapEnd() {
+        board.position(board.fen());
+    }
+
+    document.getElementById('startBtn').addEventListener('click', board.start);
+    document.getElementById('clearBtn').addEventListener('click', board.clear);
+</script>
 
 </body>
 </html>
